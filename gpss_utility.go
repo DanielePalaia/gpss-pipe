@@ -145,7 +145,7 @@ func convertType(field string, databaseType string) *gpss.DBValue {
 	return dbValue
 }
 
-func (client *gpssClient) WriteToGreenplum(buffer []string, delim string) {
+func (client *gpssClient) WriteToGreenplum(buffer []string, delim string, batched int) {
 
 	log.Printf("Beginning to write to greenplum")
 	// Take table information from greenplum
@@ -155,17 +155,18 @@ func (client *gpssClient) WriteToGreenplum(buffer []string, delim string) {
 	client.prepareForWriting(cols)
 
 	// For every entry buffered in memory check for fields
-	rowData := make([]*gpss.RowData, len(buffer))
-	for i, line := range buffer {
+	rowData := make([]*gpss.RowData, batched)
+	for i:=0;i<batched;i++ {
 
+		line := buffer[i]
 		dbValue := make([]*gpss.DBValue, len(cols.Columns))
 
 		// From an entry composed by lines return a list
-		//fields := strings.Split(strings.Replace(line, "\r\n", "\n", -1), "\n")
-		fields := strings.Split(line, delim)
+		fields := strings.Split(strings.Replace(line, "\n", "", -1), delim)
+		//fields := strings.Split(line, delim)
 
 		for j, field := range fields {
-
+			
 			dbValue[j] = convertType(field, cols.Columns[j].DatabaseType)
 
 		}

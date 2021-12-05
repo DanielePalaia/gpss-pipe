@@ -3,13 +3,21 @@ package main
 import (
 	"log"
 	"strconv"
+	"os"
 )
 
 func main() {
 
 	log.Printf("Starting the connector and reading properties in the properties.ini file")
-	/* Reading properties from ./properties.ini */
-	prop, _ := ReadPropertiesFile("./properties.ini")
+	var prop map[string]string
+
+	if len(os.Args) <= 1 { 
+		/* Reading properties from ./properties.ini */
+		prop, _ = ReadPropertiesFile("./properties.ini")
+	} else  {
+		prop, _ = ReadPropertiesFile(os.Args[1])
+	}
+	
 	port, _ := strconv.Atoi(prop["GreenplumPort"])
 	batch, _ := strconv.Atoi(prop["Batch"])
 

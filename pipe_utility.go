@@ -61,7 +61,7 @@ func (client *pipeClient) scanBuffer(buff bytes.Buffer) {
 		// File terminated, let's write what we have
 		if err != nil {
 			if i > 0 {
-				client.delegateToGpss(client.buffer)
+				client.delegateToGpss(client.buffer, i)
 			}
 			break
 		}
@@ -70,7 +70,7 @@ func (client *pipeClient) scanBuffer(buff bytes.Buffer) {
 		i++
 
 		if i >= client.batch {
-			client.delegateToGpss(client.buffer)
+			client.delegateToGpss(client.buffer, i)
 			i = 0
 
 		}
@@ -78,10 +78,10 @@ func (client *pipeClient) scanBuffer(buff bytes.Buffer) {
 
 }
 
-func (client *pipeClient) delegateToGpss(buffer []string) {
+func (client *pipeClient) delegateToGpss(buffer []string, batched int) {
 
 	client.gpssclient.ConnectToGreenplumDatabase()
-	client.gpssclient.WriteToGreenplum(client.buffer, client.delim)
+	client.gpssclient.WriteToGreenplum(client.buffer, client.delim, batched)
 	client.gpssclient.DisconnectToGreenplumDatabase()
 
 }
