@@ -41,7 +41,7 @@ CREATE TABLE people(id int, name varchar(1000), surname varchar(1000), email var
 
 6) submit the example csv file provided in the pipe (./bin/macosx/data.csv): it contains 1000 elements </br>
 
-    **cat data.csv >> mypipe </br>**
+    cat data.csv >> mypipe </br>
 
 7) you should see some logs in the pipegpss screen and the table populated with 1K elements </br>
 
